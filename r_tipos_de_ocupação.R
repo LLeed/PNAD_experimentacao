@@ -7,20 +7,21 @@ rm(list = ls())
 # carregando pacotes
 
 library(PNADcIBGE)
+
 library(tidyverse)
 library(survey)
 library(data.table)
 
 # baixando as bases
 
-var_select <- c("VD3004", "VD4009", "VD4010")
-
+var_select <- c("VD4019", "VD3004", "VD4010", "VD4009", "VD4012")
 pnad_2019 <- get_pnadc(year = 2019, quarter = 4, vars = var_select)
 
 a <-pnad_2019
-complete.cases()
 
-b <- as.data.frame(summary(a$variables$VD4009)) %>% mutate(trimestre = "2019/4T")
+b <- as.data.frame(summary(a$variables$VD4009))
+
+%>% mutate(trimestre = "2019/4T")
 b_1 <- as.data.frame(summary(a$variables$VD4009)) %>% mutate(trimestre = "2019/3T")
 
 
