@@ -19,9 +19,8 @@ trimestre <-as.list(rep(1:4, times=4))
 for (i in seq_along(anos)) {
   
   a <- get_pnadc(year = anos[[i]], quarter = trimestre[[i]], vars = var_select)
-  gc()
   assign(paste0("pnad",anos[[i]], trimestre[[i]], sep = "_" ), a )
-  gc()
+  
   
 }
 
