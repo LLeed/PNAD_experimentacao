@@ -1,19 +1,20 @@
 library(PNADcIBGE)
 library(tidyverse)
+library(data.table)
 
-anos <-list(pnad_2019, pnad_2020_1)
+bases <-list(pnad_2019, pnad_2020_1)
+anos <- as.list(2019:2020)
 #trimestre <-as.data.frame(rep(1:2, times=2))
 #trimestre <- list(trimestre)#[-40,])
 trimestre <-as.list(1)
 
 
-for (i in seq_along(anos)) {
-  l = list()
+for (i in seq_along(bases)) {
   #ano = anos[[i]]
-  q <- anos[[i]]
+  l <- list()
+  q <- bases[[i]]
   for (j in seq_along(trimestre)) {
     #q <- get_pnadc(year = ano, quarter = trimestre[[j]] , vars = var_select)
-    
     ###    
     q$variables$VD4010[q$variables$VD4010 == "Educação, saúde humana e serviços sociais" &
                          q$variables$VD4008 == g ] <- as.factor(f)
@@ -40,13 +41,12 @@ for (i in seq_along(anos)) {
     q -> l[[i]]
   }
   
-  relacao <- as.data.frame(l)
+  relacao <- rbindlist(l, use.names=FALSE)
   names(relacao)[1] <- "porcentagem_no_servico"
   names(relacao)[2] <- "categorias"
-  writexl::write_xlsx(relacao, paste0(as.character(anos[[i]]), sep = "_", i, ".xlsx"));
-  
+  writexl::write_xlsx(relacao, paste0(as.character(anos[[i]]), ".xlsx"));
+  assign(paste0("relacao_",i),relacao)
 }
-
 
 
 
