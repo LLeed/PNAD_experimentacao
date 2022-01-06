@@ -26,11 +26,11 @@ g <-pnad_2019$variables$VD4008[1] # "Empregado no Setor Privado"
 aea <-pnad_2019$variables$VD4010[10] # "Alojamento e alimentação"
 r <- pnad_2020_1$variables$VD4010[204] # "Atividades Mal Definidas"
 
-rm(pnad_2020_1)
-anos <-as.list(2012:2013)
+
+anos <-as.list(2012)#:2020)
 #trimestre <-as.data.frame(rep(1:2, times=2))
 #trimestre <- list(trimestre)#[-40,])
-trimestre <-as.list(rep(1:2, times=2))
+trimestre <-as.list(1:4)
 
 
 for (i in seq_along(anos)) {
@@ -38,8 +38,8 @@ for (i in seq_along(anos)) {
   ano = anos[[i]]
   for (j in seq_along(trimestre)) {
     q <- get_pnadc(year = ano, quarter = trimestre[[j]] , vars = var_select)
-   
-###    
+    
+    ###    
     q$variables$VD4010[q$variables$VD4010 == "Educação, saúde humana e serviços sociais" &
                          q$variables$VD4008 == g ] <- as.factor(f)
     q$variables$VD4010[q$variables$VD4010 == "Educação, saúde humana e serviços sociais" &
@@ -53,16 +53,24 @@ for (i in seq_along(anos)) {
     q$variables$VD4010[q$variables$VD4010 == "Serviços domésticos"] <- as.factor(f)
     q$variables$VD4010[q$variables$VD4010 == aea] <- as.factor(f)
     q$variables$VD4010[q$variables$VD4010 == r] <- as.factor(f)
-    q <- as.data.frame(summary(na.omit(q$variables$VD4009))) %>% 
-      mutate(trimestre = paste0(ano, sep="_" ,trimestre[[i]]))
-    q <- q / sum(q)
-    assign(paste0(ano,sep="_",trimestre[[j]]), q) -> l[[j]]
+    ################    
+    q <- as.data.frame(summary(na.omit(droplevels(q$variables$VD4010))))
+    q1 <- row.names(q)
+    q <-q[-c(1,2,3),] 
+    q <- (q/sum(q))
+    q <- as.data.frame(cbind(q, q1[4:length(q1)]))
+    q <- q %>% mutate(trimestre = paste0(as.character(anos[[i]]),
+                                         sep="_",
+                                         as.character(trimestre[[j]])))
+    q -> l[[i]]
   }
-  l <- as.data.frame(l)
-  writexl::write_xlsx(l, paste(relacao,ano, sep = "_"))
+  
+  relacao <- as.data.frame(l)
+  names(relacao)[1] <- "porcentagem_no_servico"
+  names(relacao)[2] <- "categorias"
+  writexl::write_xlsx(relacao, paste0(as.character(anos[[i]]), sep = "_", i, ".xlsx"));
   
 }
-
 
 
 
