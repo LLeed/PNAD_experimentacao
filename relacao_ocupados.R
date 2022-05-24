@@ -24,31 +24,27 @@ h <-pnad_2019$variables$VD4010[40] # "Informação, comunicação e atividades f
 f <-pnad_2019$variables$VD4010[30] # "Outros Serviços"
 g <-pnad_2019$variables$VD4008[1] # "Empregado no Setor Privado"
 aea <-pnad_2019$variables$VD4010[10] # "Alojamento e alimentação"
-r <- pnad_2020_1$variables$VD4010[204] # "Atividades Mal Definidas"
+r <- pnad_2020_1$variables$VD4010[204] # "Atividades Mal Definid
 
 
-<<<<<<< Updated upstream
 anos <-as.list(2012)#:2020)
 #trimestre <-as.data.frame(rep(1:2, times=2))
 #trimestre <- list(trimestre)#[-40,])
 trimestre <-as.list(1:4)
 
-=======
 anos <-as.list(2021)
 #trimestre <-as.data.frame(rep(1:2, times=2))
 #trimestre <- list(trimestre)#[-40,])
 trimestre <-as.list(1:3)
->>>>>>> Stashed changes
+
 
 for (i in seq_along(anos)) {
   l <- list()
   ano = anos[[i]]
   for (j in seq_along(trimestre)) {
     q <- get_pnadc(year = ano, quarter = trimestre[[j]] , vars = var_select)
-<<<<<<< Updated upstream
+
     
-=======
->>>>>>> Stashed changes
     ###    
     q$variables$VD4010[q$variables$VD4010 == "Educação, saúde humana e serviços sociais" &
                          q$variables$VD4008 == g ] <- as.factor(f)
@@ -72,7 +68,7 @@ for (i in seq_along(anos)) {
     q <- q %>% mutate(trimestre = paste0(as.character(anos[[i]]),
                                          sep="_",
                                          as.character(trimestre[[j]])))
-<<<<<<< Updated upstream
+
     q -> l[[i]]
   }
   
@@ -80,16 +76,13 @@ for (i in seq_along(anos)) {
   names(relacao)[1] <- "porcentagem_no_servico"
   names(relacao)[2] <- "categorias"
   writexl::write_xlsx(relacao, paste0(as.character(anos[[i]]), sep = "_", i, ".xlsx"));
-=======
     q -> l[[j]]
   }
->>>>>>> Stashed changes
+
   
   relacao <- rbindlist(l, use.names=FALSE)
   names(relacao)[1] <- "porcentagem_no_servico"
   names(relacao)[2] <- "categorias"
   writexl::write_xlsx(relacao, paste0(as.character(anos[[i]]), ".xlsx"));
-}
-
 
 
